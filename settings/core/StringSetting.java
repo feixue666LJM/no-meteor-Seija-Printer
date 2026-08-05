@@ -10,6 +10,7 @@ import com.google.gson.JsonPrimitive;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public class StringSetting extends Setting<String> {
     private final Predicate<String> validator;
@@ -45,7 +46,7 @@ public class StringSetting extends Setting<String> {
 
     @Override
     protected String load(NbtCompound tag) {
-        return tag.getString("value").orElse(defaultValue);
+        return tag.contains("value", NbtElement.STRING_TYPE) ? tag.getString("value") : defaultValue;
     }
 
     @Override

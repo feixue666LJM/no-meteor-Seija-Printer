@@ -49,7 +49,7 @@ public class ScaffoldFixer extends AbstractFixer {
                     PlaceData interactData = PlaceData.NULL;
                     if (pri().bSetIllegalRotate.get()) {
                         interactData = PlaceData.newInstance(helperPos, Direction.UP, clickVec, true, BlockRotDataGetter.getRotateDataFromDir(off.getOpposite()));
-                    } else if (Direction.fromHorizontalDegrees(SeijaUtil.getYaw(clickVec)) == off.getOpposite())
+                    } else if (Direction.fromRotation(SeijaUtil.getYaw(clickVec)) == off.getOpposite())
                         //1.21 Direction.fromRotation
                     {
                         interactData = PlaceData.newInstance(helperPos, Direction.UP, clickVec, true, null);

@@ -92,28 +92,29 @@ public class BlockReplaceSetting extends Setting<HashMap<List<Block>, List<Block
 
     @Override
     protected HashMap<List<Block>, List<Block>> load(NbtCompound tag) {
-        get().clear();
-        NbtList entryListTag = tag.getListOrEmpty("value");
+        if (!tag.contains("value", NbtElement.LIST_TYPE)) return copy(defaultValue);
+
+        HashMap<List<Block>, List<Block>> entries = new LinkedHashMap<>();
+        NbtList entryListTag = tag.getList("value", NbtElement.COMPOUND_TYPE);
 
         for (int i = 0; i < entryListTag.size(); i++) {
-            NbtCompound entryTag = entryListTag.getCompound(i).orElse(null);
-            if (entryTag==null)continue;
-            NbtList keyBlocksTag = entryTag.getListOrEmpty("keyBlocks");
+            NbtCompound entryTag = entryListTag.getCompound(i);
+            NbtList keyBlocksTag = entryTag.getList("keyBlocks", NbtElement.STRING_TYPE);
             ArrayList<Block> keyList = new ArrayList<>();
             for (NbtElement tagI : keyBlocksTag) {
-                Block block = Registries.BLOCK.get(Identifier.of(tagI.asString().orElse("")));
+                Block block = Registries.BLOCK.get(Identifier.of(tagI.asString()));
                 keyList.add(block);
             }
-            NbtList valBlocksTag = entryTag.getListOrEmpty("valBlocks");
+            NbtList valBlocksTag = entryTag.getList("valBlocks", NbtElement.STRING_TYPE);
             ArrayList<Block> valList = new ArrayList<>();
             for (NbtElement tagI : valBlocksTag) {
-                Block block = Registries.BLOCK.get(Identifier.of(tagI.asString().orElse("")));
+                Block block = Registries.BLOCK.get(Identifier.of(tagI.asString()));
                 valList.add(block);
             }
-            get().put(keyList, valList);
+            entries.put(keyList, valList);
         }
 
-        return get();
+        return entries;
     }
 
     @Override

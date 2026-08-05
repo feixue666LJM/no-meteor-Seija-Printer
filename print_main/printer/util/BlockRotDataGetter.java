@@ -31,7 +31,6 @@ import net.minecraft.block.JigsawBlock;
 import net.minecraft.block.LecternBlock;
 import net.minecraft.block.LoomBlock;
 import net.minecraft.block.PistonBlock;
-import net.minecraft.block.ShelfBlock;
 import net.minecraft.block.SignBlock;
 import net.minecraft.block.SmallDripleafBlock;
 import net.minecraft.block.StonecutterBlock;
@@ -75,7 +74,7 @@ public class BlockRotDataGetter {
             || block instanceof CarvedPumpkinBlock || block instanceof ChiseledBookshelfBlock
             || block instanceof EndPortalFrameBlock || block instanceof FlowerbedBlock
             || block instanceof GlazedTerracottaBlock || block instanceof JigsawBlock
-            || block instanceof LoomBlock || block instanceof ShelfBlock
+            || block instanceof LoomBlock
         ) {
             return getRotateDataFromDir(bs.get(Properties.HORIZONTAL_FACING).getOpposite());
         }

@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import java.util.function.Consumer;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public class ColorSetting extends Setting<SettingColor> {
     protected ColorSetting(
@@ -62,11 +63,11 @@ public class ColorSetting extends Setting<SettingColor> {
     @Override
     protected SettingColor load(NbtCompound tag) {
         return new SettingColor(
-            tag.getInt("r").orElse(defaultValue.r),
-            tag.getInt("g").orElse(defaultValue.g),
-            tag.getInt("b").orElse(defaultValue.b),
-            tag.getInt("a").orElse(defaultValue.a),
-            tag.getBoolean("rainbow").orElse(defaultValue.rainbow)
+            tag.contains("r", NbtElement.NUMBER_TYPE) ? tag.getInt("r") : defaultValue.r,
+            tag.contains("g", NbtElement.NUMBER_TYPE) ? tag.getInt("g") : defaultValue.g,
+            tag.contains("b", NbtElement.NUMBER_TYPE) ? tag.getInt("b") : defaultValue.b,
+            tag.contains("a", NbtElement.NUMBER_TYPE) ? tag.getInt("a") : defaultValue.a,
+            tag.contains("rainbow", NbtElement.NUMBER_TYPE) ? tag.getBoolean("rainbow") : defaultValue.rainbow
         );
     }
 

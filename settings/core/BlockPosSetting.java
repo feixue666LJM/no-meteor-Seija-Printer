@@ -56,9 +56,9 @@ public class BlockPosSetting extends Setting<BlockPos> {
     protected BlockPos load(NbtCompound tag) {
         if (!tag.contains("x") || !tag.contains("y") || !tag.contains("z")) return defaultValue;
         return new BlockPos(
-            tag.getInt("x").orElse(0),
-            tag.getInt("y").orElse(0),
-            tag.getInt("z").orElse(0)
+            tag.getInt("x"),
+            tag.getInt("y"),
+            tag.getInt("z")
         );
     }
 

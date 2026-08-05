@@ -15,13 +15,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +74,7 @@ public final class Addon implements ClientModInitializer {
         registerKeyMappings();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onEndClientTick);
-        WorldRenderEvents.END_MAIN.register(this::onEndLevelRender);
+        WorldRenderEvents.LAST.register(this::onEndLevelRender);
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> runtime.onDisconnect());
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             runtime.onDisconnect();
@@ -84,9 +83,7 @@ public final class Addon implements ClientModInitializer {
     }
 
     private void registerKeyMappings() {
-        KeyBinding.Category category = KeyBinding.Category.create(
-            Identifier.of(MOD_ID, "controls")
-        );
+        String category = "key.category." + MOD_ID + ".controls";
         // F6/F7 are deliberately separate so an accidental press cannot invert state.
         enablePrinter = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.seija_printer.enable",

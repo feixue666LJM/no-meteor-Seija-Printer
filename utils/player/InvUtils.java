@@ -56,10 +56,10 @@ public final class InvUtils {
     public static boolean swap(int slot, boolean swapBack) {
         MinecraftClient minecraft = MinecraftClient.getInstance();
         if (minecraft.player == null || !SlotUtils.isHotbar(slot)) return false;
-        int current = minecraft.player.getInventory().getSelectedSlot();
+        int current = minecraft.player.getInventory().selectedSlot;
         if (current == slot) return true;
         if (swapBack && previousSlot < 0) previousSlot = current;
-        minecraft.player.getInventory().setSelectedSlot(slot);
+        minecraft.player.getInventory().selectedSlot = slot;
         if (minecraft.getNetworkHandler() != null) {
             minecraft.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(slot));
         }

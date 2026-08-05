@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import java.util.function.Consumer;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public class IntSetting extends Setting<Integer> {
     public final int min;
@@ -63,7 +64,7 @@ public class IntSetting extends Setting<Integer> {
 
     @Override
     protected Integer load(NbtCompound tag) {
-        return tag.getInt("value").orElse(defaultValue);
+        return tag.contains("value", NbtElement.NUMBER_TYPE) ? tag.getInt("value") : defaultValue;
     }
 
     @Override

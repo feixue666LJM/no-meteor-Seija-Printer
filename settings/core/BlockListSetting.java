@@ -72,9 +72,11 @@ public class BlockListSetting extends Setting<List<Block>> {
 
     @Override
     protected List<Block> load(NbtCompound tag) {
+        if (!tag.contains("value", NbtElement.LIST_TYPE)) return copy(defaultValue);
+
         List<Block> blocks = new ArrayList<>();
-        for (NbtElement valueTag : tag.getListOrEmpty("value")) {
-            String id = valueTag.asString().orElse("");
+        for (NbtElement valueTag : tag.getList("value", NbtElement.STRING_TYPE)) {
+            String id = valueTag.asString();
             if (!id.isEmpty()) blocks.add(Registries.BLOCK.get(Identifier.of(id)));
         }
         return blocks;

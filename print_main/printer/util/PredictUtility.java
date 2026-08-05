@@ -18,16 +18,15 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
 
 public class PredictUtility {
     static MinecraftClient mc = MinecraftClient.getInstance();
     public static PlayerEntity predictPlayer(PlayerEntity entity, int ticks) {
         if (ticks<=0)return entity;
         Vec3d posVec = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
-        double motionX = entity.getX() - entity.lastX;
-        double motionY = entity.getY() - entity.lastY;
-        double motionZ = entity.getZ() - entity.lastZ;
+        double motionX = entity.getX() - entity.prevX;
+        double motionY = entity.getY() - entity.prevY;
+        double motionZ = entity.getZ() - entity.prevZ;
         for (int i = 0; i < ticks; ++i) {
             if (!mc.world.isAir(BlockPos.ofFloored(posVec.add(0.0, motionY, 0.0)))) {
                 motionY = 0.0;
@@ -49,9 +48,9 @@ public class PredictUtility {
     public static Vec3d predictPlayerVec(PlayerEntity entity, int ticks) {
         //if (ticks<=0)return entity;
         Vec3d posVec = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
-        double motionX = entity.getX() - entity.lastX;
-        double motionY = entity.getY() - entity.lastY;
-        double motionZ = entity.getZ() - entity.lastZ;
+        double motionX = entity.getX() - entity.prevX;
+        double motionY = entity.getY() - entity.prevY;
+        double motionZ = entity.getZ() - entity.prevZ;
         for (int i = 0; i < ticks; ++i) {
             if (!mc.world.isAir(BlockPos.ofFloored(posVec.add(0.0, motionY, 0.0)))) {
                 motionY = 0.0;
@@ -69,28 +68,35 @@ public class PredictUtility {
     }
 
     public static PlayerEntity equipAndReturn(PlayerEntity original, Vec3d posVec) {
-        PlayerEntity copyEntity = new PlayerEntity(mc.world, new GameProfile(UUID.fromString("66123666-1234-5432-6666-667563866600"), "PredictEntity339")){
+        PlayerEntity copyEntity = new PlayerEntity(mc.world, BlockPos.ORIGIN, 0.0F,
+            new GameProfile(UUID.fromString("66123666-1234-5432-6666-667563866600"), "PredictEntity339")){
 
 
             @Override
-            public GameMode getGameMode() {
-                return GameMode.SURVIVAL;
+            public boolean isSpectator() {
+                return false;
+            }
+
+            @Override
+            public boolean isCreative() {
+                return false;
             }
         };
 
         copyEntity.setPosition(posVec);
         copyEntity.setHealth(original.getHealth());
-        copyEntity.lastX = original.lastX;
-        copyEntity.lastZ = original.lastZ;
-        copyEntity.lastY = original.lastY;
+        copyEntity.prevX = original.prevX;
+        copyEntity.prevZ = original.prevZ;
+        copyEntity.prevY = original.prevY;
         copyEntity.getInventory().clone(original.getInventory());
         copyEntity.setYaw(original.getYaw());
         copyEntity.setPitch(original.getPitch());
-        copyEntity.lastYaw = original.lastYaw;
+        copyEntity.prevYaw = original.prevYaw;
         copyEntity.headYaw = original.headYaw;
         copyEntity.bodyYaw = original.bodyYaw;
-        copyEntity.lastHeadYaw = original.lastHeadYaw;
-        copyEntity.lastPitch = original.lastPitch;
+        copyEntity.prevHeadYaw = original.prevHeadYaw;
+        copyEntity.prevBodyYaw = original.prevBodyYaw;
+        copyEntity.prevPitch = original.prevPitch;
         for (StatusEffectInstance se : original.getStatusEffects()) {
             copyEntity.addStatusEffect(se);
         }

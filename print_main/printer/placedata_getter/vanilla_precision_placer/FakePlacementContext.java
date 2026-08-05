@@ -26,7 +26,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
 
 public class FakePlacementContext extends ItemPlacementContext {
 
@@ -54,7 +53,8 @@ public class FakePlacementContext extends ItemPlacementContext {
             fakePlayer = null;
             return;
         }
-        fakePlayer = new PlayerEntity(mc.world, new GameProfile(UUID.fromString("66123666-1234-5432-6666-667563866600"), "PredictEntity339")) {
+        fakePlayer = new PlayerEntity(mc.world, BlockPos.ORIGIN, 0.0F,
+            new GameProfile(UUID.fromString("66123666-1234-5432-6666-667563866600"), "PredictEntity339")) {
 
 
 
@@ -64,8 +64,13 @@ public class FakePlacementContext extends ItemPlacementContext {
             }
 
             @Override
-            public @NotNull GameMode getGameMode() {
-                return GameMode.SURVIVAL;
+            public boolean isSpectator() {
+                return false;
+            }
+
+            @Override
+            public boolean isCreative() {
+                return false;
             }
 
         };
@@ -77,16 +82,17 @@ public class FakePlacementContext extends ItemPlacementContext {
         e.setHeadYaw(yaw);
         e.setBodyYaw(yaw);
 
-        e.lastHeadYaw = yaw;
-        e.lastYaw = yaw;
-        e.lastPitch = pitch;
+        e.prevHeadYaw = yaw;
+        e.prevBodyYaw = yaw;
+        e.prevYaw = yaw;
+        e.prevPitch = pitch;
 
     }
     protected static void setMovementMode(PlayerEntity e){
         e.setSwimming(mc.player.isSwimming());
-        if (mc.player.isGliding()) {
-            e.startGliding();
-        }else e.stopGliding();
+        if (mc.player.isFallFlying()) {
+            e.startFallFlying();
+        }else e.stopFallFlying();
     }
 
     public static FakePlacementContext getInstanceInte(Vec3d clickVec, BlockPos placePos, Direction offsetDir, ItemStack stack) {

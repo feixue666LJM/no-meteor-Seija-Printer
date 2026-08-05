@@ -31,7 +31,7 @@ public class DirectionListSetting extends Setting<List<Direction>> {
         String[] values = str.split(",");
         List<Direction> dirs = new ArrayList<>(values.length);
         for (String s : values) {
-            Direction dir = Direction.byId(s);
+            Direction dir = Direction.byName(s);
             if (dir != null) dirs.add(dir);
         }
         return dirs;
@@ -51,7 +51,7 @@ public class DirectionListSetting extends Setting<List<Direction>> {
     public NbtCompound save(NbtCompound tag) {
         NbtList valueTag = new NbtList();
         for (Direction dir : get()) {
-            valueTag.add(NbtString.of(dir.getId()));
+            valueTag.add(NbtString.of(dir.getName()));
         }
         tag.put("value", valueTag);
 
@@ -60,22 +60,23 @@ public class DirectionListSetting extends Setting<List<Direction>> {
 
     @Override
     public List<Direction> load(NbtCompound tag) {
-        get().clear();
+        if (!tag.contains("value", NbtElement.LIST_TYPE)) return new ArrayList<>(defaultValue);
 
-        NbtList valueTag = tag.getListOrEmpty("value");
+        List<Direction> directions = new ArrayList<>();
+        NbtList valueTag = tag.getList("value", NbtElement.STRING_TYPE);
         for (NbtElement tagI : valueTag) {
-            Direction dir = Direction.byId(tagI.asString().orElse(null));
+            Direction dir = Direction.byName(tagI.asString());
             if (dir != null)
-                get().add(dir);
+                directions.add(dir);
         }
 
-        return get();
+        return directions;
     }
 
     @Override
     public JsonElement toJson() {
         JsonArray json = new JsonArray();
-        for (Direction direction : get()) json.add(new JsonPrimitive(direction.getId()));
+        for (Direction direction : get()) json.add(new JsonPrimitive(direction.getName()));
         return json;
     }
 
@@ -84,7 +85,7 @@ public class DirectionListSetting extends Setting<List<Direction>> {
         if (json == null || !json.isJsonArray()) return false;
         List<Direction> directions = new ArrayList<>();
         for (JsonElement element : json.getAsJsonArray()) {
-            Direction direction = Direction.byId(element.getAsString());
+            Direction direction = Direction.byName(element.getAsString());
             if (direction == null) return false;
             directions.add(direction);
         }

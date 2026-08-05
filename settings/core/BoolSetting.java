@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import java.util.function.Consumer;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public class BoolSetting extends Setting<Boolean> {
     protected BoolSetting(
@@ -37,7 +38,7 @@ public class BoolSetting extends Setting<Boolean> {
 
     @Override
     protected Boolean load(NbtCompound tag) {
-        return tag.getBoolean("value").orElse(defaultValue);
+        return tag.contains("value", NbtElement.NUMBER_TYPE) ? tag.getBoolean("value") : defaultValue;
     }
 
     @Override

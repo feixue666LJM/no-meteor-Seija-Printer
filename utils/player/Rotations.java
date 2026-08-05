@@ -42,7 +42,7 @@ public final class Rotations {
         return Math.toDegrees(Math.atan2(target.z - origin.z, target.x - origin.x)) - 90.0;
     }
 
-    public static double getYaw(Entity target) { return getYaw(target.getEntityPos()); }
+    public static double getYaw(Entity target) { return getYaw(target.getPos()); }
     public static double getPitch(Vec3d target) {
         MinecraftClient minecraft = MinecraftClient.getInstance();
         if (minecraft.player == null) return 0;
@@ -50,7 +50,7 @@ public final class Rotations {
         double horizontal = Math.sqrt((target.x - origin.x) * (target.x - origin.x) + (target.z - origin.z) * (target.z - origin.z));
         return -Math.toDegrees(Math.atan2(target.y - origin.y, horizontal));
     }
-    public static double getPitch(Entity target) { return getPitch(target.getEntityPos()); }
+    public static double getPitch(Entity target) { return getPitch(target.getPos()); }
 
     public static void setCamRotation(double yaw, double pitch) {
         MinecraftClient minecraft = MinecraftClient.getInstance();

@@ -21,7 +21,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -47,7 +46,7 @@ public class BuckedDataGetter extends AbstractDataGetter {
                     BlockHitResult blockHitResult = RayTraceUtil.INSTANCE.rayHitRes
                         (mc.player.getEyePos(),  RotationData.build(BlockStateVerify.sendYaw,
                                 BlockStateVerify.sendPitch), false,
-                            mc.player.getAttributeValue(EntityAttributes.BLOCK_INTERACTION_RANGE));
+                            mc.player.getBlockInteractionRange());
 //                    ChatUtils.info(blockHitResult.getType() + "  " + blockHitResult.getBlockPos());
 //                    ChatUtils.info();
                     return blockHitResult.getType().equals(HitResult.Type.BLOCK) && blockHitResult.getBlockPos().equals(placePos.offset(offsetDir));

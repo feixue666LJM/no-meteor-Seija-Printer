@@ -75,7 +75,7 @@ public class InvUtil {
     }
 
     public static int getInvSwapSlot() {
-        int selSlot = mc.player.getInventory().getSelectedSlot();
+        int selSlot = mc.player.getInventory().selectedSlot;
         if (pri.bSetIndirectInvSwap.get()) {
             return getSlot();
         }
@@ -87,7 +87,7 @@ public class InvUtil {
 
     public static int getSlot() {
         List<Integer> usefulSlots = getUsefulSlots();
-        int selSlot = mc.player.getInventory().getSelectedSlot();
+        int selSlot = mc.player.getInventory().selectedSlot;
         if (usefulSlots.size() > 1) usefulSlots.remove(Integer.valueOf(selSlot));
         if (usefulSlots.size() > 0) {
             if (i >= usefulSlots.size()) i = 0;

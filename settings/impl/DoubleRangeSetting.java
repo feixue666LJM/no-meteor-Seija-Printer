@@ -9,6 +9,7 @@ package com.kijinseija.seija_printer.settings.impl;
 
 import java.util.function.Consumer;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -70,7 +71,10 @@ public class DoubleRangeSetting extends Setting<DoubleRange> {
 
     @Override
     public DoubleRange load(NbtCompound tag) {
-        DoubleRange doubleRange = new DoubleRange(tag.getDouble("value1").orElse(0d),tag.getDouble("value2").orElse(0d));
+        DoubleRange doubleRange = new DoubleRange(
+            tag.contains("value1", NbtElement.NUMBER_TYPE) ? tag.getDouble("value1") : defaultValue.value1,
+            tag.contains("value2", NbtElement.NUMBER_TYPE) ? tag.getDouble("value2") : defaultValue.value2
+        );
         set(doubleRange);
         return get();
     }

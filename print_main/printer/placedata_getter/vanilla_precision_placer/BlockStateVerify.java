@@ -43,7 +43,7 @@ public class BlockStateVerify {
             sendPitch = mc.player.getPitch();
         }
 
-        fakePlayer.setPosition(mc.player.getEntityPos());
+        fakePlayer.setPosition(mc.player.getPos());
         if (rdata == null) {
             setRotate(fakePlayer, sendYaw, sendPitch);
             //ChatUtils.sendMsg(Text.of(mc.player.getYaw() + "," + mc.player.getPitch()));

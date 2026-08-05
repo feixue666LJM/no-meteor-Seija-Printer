@@ -43,7 +43,7 @@ public class EnumSetting<T extends Enum<T>> extends Setting<T> {
 
     @Override
     protected T load(NbtCompound tag) {
-        T parsed = parseImpl(tag.getString("value").orElse(""));
+        T parsed = parseImpl(tag.getString("value"));
         return parsed == null ? defaultValue : parsed;
     }
 

@@ -11,6 +11,7 @@ import com.google.gson.JsonPrimitive;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public abstract class Setting<T> {
     public final String name;
@@ -109,7 +110,8 @@ public abstract class Setting<T> {
     }
 
     protected T load(NbtCompound tag) {
-        return parseImpl(tag.getString("value").orElse(""));
+        if (!tag.contains("value", NbtElement.STRING_TYPE)) return defaultValue;
+        return parseImpl(tag.getString("value"));
     }
 
     public JsonElement toJson() {

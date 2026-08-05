@@ -12,7 +12,7 @@ public record FindItemResult(int slot, int count) {
     public Hand getHand() {
         if (slot == 40) return Hand.OFF_HAND;
         MinecraftClient minecraft = MinecraftClient.getInstance();
-        if (minecraft.player != null && slot == minecraft.player.getInventory().getSelectedSlot()) {
+        if (minecraft.player != null && slot == minecraft.player.getInventory().selectedSlot) {
             return Hand.MAIN_HAND;
         }
         return null;
