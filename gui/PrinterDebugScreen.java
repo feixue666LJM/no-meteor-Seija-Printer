@@ -268,7 +268,7 @@ public final class PrinterDebugScreen extends Screen {
         if (value instanceof Collection<?> collection) {
             return collection.stream().map(entry -> {
                 if (entry instanceof Block block) return Registries.BLOCK.getId(block).toString();
-                if (entry instanceof Direction direction) return direction.getId();
+                if (entry instanceof Direction direction) return direction.asString();
                 return String.valueOf(entry);
             }).reduce((left, right) -> left + "," + right).orElse("");
         }
@@ -283,7 +283,9 @@ public final class PrinterDebugScreen extends Screen {
     }
 
     @Override
-    public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
+    public void renderBackground(DrawContext graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+
         int left = panelLeft();
         int right = panelRight();
         int top = panelTop();
@@ -294,6 +296,19 @@ public final class PrinterDebugScreen extends Screen {
         graphics.drawHorizontalLine(left, right - 1, bottom - 1, 0xFF59616B);
         graphics.drawVerticalLine(left, top, bottom - 1, 0xFF59616B);
         graphics.drawVerticalLine(right - 1, top, bottom - 1, 0xFF59616B);
+    }
+
+    @Override
+    public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
+        // Screen.render() applies the blurred background before drawing widgets.
+        // Draw labels afterwards so they never become part of the blur pass.
+        super.render(graphics, mouseX, mouseY, delta);
+
+        int left = panelLeft();
+        int right = panelRight();
+        int top = panelTop();
+        int bottom = panelBottom();
+
         graphics.drawCenteredTextWithShadow(textRenderer, title, width / 2, 8, 0xFFFFFFFF);
 
         ClientModule module = currentModule();
@@ -312,8 +327,6 @@ public final class PrinterDebugScreen extends Screen {
                 graphics.drawTextWithShadow(textRenderer, Text.literal(label), left + 8, row.y() + 5, 0xFFE8E8E8);
             }
         }
-
-        super.render(graphics, mouseX, mouseY, delta);
     }
 
     @Override
@@ -348,7 +361,7 @@ public final class PrinterDebugScreen extends Screen {
 
     private String diagnostics() {
         String world = client.world == null ? "world: none" : "world: loaded";
-        String player = client.player == null ? "player: none" : "player: " + client.player.getGameProfile().name();
+        String player = client.player == null ? "player: none" : "player: " + client.player.getGameProfile().getName();
         String queue = "rotation: " + RotationManager.INSTANCE.taskSize();
         String render = "render: " + RenderUtil.renderList.size();
         ClientModule module = currentModule();

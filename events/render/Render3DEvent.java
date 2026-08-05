@@ -7,16 +7,15 @@ package com.kijinseija.seija_printer.events.render;
 
 import com.kijinseija.seija_printer.render.ShapeMode;
 import com.kijinseija.seija_printer.settings.core.Color;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShapes;
 
 /** Render callback payload and a small immediate-style shape facade. */
 public final class Render3DEvent {
@@ -26,7 +25,7 @@ public final class Render3DEvent {
 
     public Render3DEvent(WorldRenderContext context) {
         this.context = context;
-        this.matrices = context.matrices();
+        this.matrices = context.matrixStack();
         this.renderer = new Renderer(context);
     }
 
@@ -44,9 +43,9 @@ public final class Render3DEvent {
 
         private Renderer(WorldRenderContext context) {
             this.context = context;
-            this.matrices = context.matrices();
-            Camera camera = context.gameRenderer().getCamera();
-            this.cameraPosition = camera == null ? Vec3d.ZERO : camera.getCameraPos();
+            this.matrices = context.matrixStack();
+            Camera camera = context.camera();
+            this.cameraPosition = camera == null ? Vec3d.ZERO : camera.getPos();
         }
 
         public void box(Box box, Color sideColor, Color lineColor, ShapeMode mode, int ignoredFlags) {
@@ -120,7 +119,15 @@ public final class Render3DEvent {
                 box.minX - cameraPosition.x, box.minY - cameraPosition.y, box.minZ - cameraPosition.z,
                 box.maxX - cameraPosition.x, box.maxY - cameraPosition.y, box.maxZ - cameraPosition.z
             );
-            VertexRendering.drawOutline(matrices, vertices, VoxelShapes.cuboid(relative), 0, 0, 0, color.argb());
+            WorldRenderer.drawBox(
+                matrices,
+                vertices,
+                relative,
+                color.r / 255.0F,
+                color.g / 255.0F,
+                color.b / 255.0F,
+                color.a / 255.0F
+            );
         }
 
         private static void vertex(VertexConsumer vertices, MatrixStack.Entry pose,
